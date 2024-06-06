@@ -4,6 +4,7 @@ import { AuthService } from "./auth.service";
 import { AuthDto } from "./dtos/auth.dto";
 import { LoginDto } from "./dtos/login.dto";
 import { LocalAuthGuard } from "./local-auth.guard";
+import { JwtAuthGuard } from "./jwt-auth.guard";
 
 @Controller("auth")
 export class AuthController {
@@ -26,6 +27,7 @@ export class AuthController {
     }
 
     @Get('profile')
+    @UseGuards(JwtAuthGuard)
     @UseGuards()
     profile() {
         return 'profile';
