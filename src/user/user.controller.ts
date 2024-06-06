@@ -29,7 +29,7 @@ export class UserController {
     }
 
     @Get("/:id")
-    // @UseInterceptors(TransformInterceptor)
+    @UseInterceptors(TransformInterceptor)
     async getUser(@Param("id", ParseIntPipe) id: number) {
         const user = await this.userService.findUnique(id);
 
