@@ -44,4 +44,44 @@ export class AuthService {
         return user;
     }
     // End Here
+
+    // update token
+    async updateToken(id: number, token: string) {
+        const user = await this.prisma.user.update({
+            where: {
+                id
+            },
+            data: {
+                token
+            }
+        });
+        return token;
+    }
+
+    async validateUsrByToken(id: number) {
+        const user = await this.prisma.user.findUnique({
+            where: {
+                id,
+            }
+        });
+
+        if (!user || user.token === null) {
+            throw new UnauthorizedException();
+        }
+
+        return user;
+    }
+
+    // Logout
+    async removeToken(id: number) {
+        const user = await this.prisma.user.update({
+            where: {
+                id
+            },
+            data: {
+                token: null
+            }
+        });
+        return 'Removed Token';
+    }
 }

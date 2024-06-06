@@ -19,10 +19,11 @@ export class AuthController {
 
     @Post("/login")
     @UseGuards(LocalAuthGuard)
-    login(@Body() body: LoginDto, @Request() req) {
+    async login(@Body() body: LoginDto, @Request() req) {
+        const token = this.jwtService.sign({ id: req.user.id, email: req.user.email });
+        await this.authService.updateToken(req.user.id, token);
         return {
-            token: this.jwtService.sign({ id: req.user.id, email: req.user.email }),
-            body
+            token,
         };
     }
 
@@ -31,5 +32,12 @@ export class AuthController {
     @UseGuards()
     profile() {
         return 'profile';
+    }
+
+    @Post("logout")
+    @UseGuards(JwtAuthGuard)
+    async logout(@Request() req) {
+        await this.authService.removeToken(req.user.id);
+        return { message: "User logout" };
     }
 }
