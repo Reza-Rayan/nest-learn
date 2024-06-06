@@ -16,7 +16,9 @@ import { UpdateUserDto } from "./dtos/update-user.dto";
 import { UserService } from "./user.service";
 import { TransformInterceptor } from "./interceptors/transform.interceptor";
 import { AuthGuard } from "src/auth/auth.guard";
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 
+@UseGuards(JwtAuthGuard)
 @Controller("users")
 export class UserController {
     constructor(public userService: UserService) { }
