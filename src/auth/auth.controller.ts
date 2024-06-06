@@ -1,4 +1,5 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { JwtService } from "@nestjs/jwt";
 import { AuthService } from "./auth.service";
 import { AuthDto } from "./dtos/auth.dto";
 import { LoginDto } from "./dtos/login.dto";
@@ -6,7 +7,7 @@ import { LocalAuthGuard } from "./local-auth.guard";
 
 @Controller("auth")
 export class AuthController {
-    constructor(private authService: AuthService) { }
+    constructor(private authService: AuthService, public jwtService: JwtService) { }
 
     @Post("/register")
     async register(@Body() body: AuthDto) {
@@ -18,6 +19,15 @@ export class AuthController {
     @Post("/login")
     @UseGuards(LocalAuthGuard)
     login(@Body() body: LoginDto, @Request() req) {
-        return body;
+        return {
+            token: this.jwtService.sign({ id: req.user.id, email: req.user.email }),
+            body
+        };
+    }
+
+    @Get('profile')
+    @UseGuards()
+    profile() {
+        return 'profile';
     }
 }
